@@ -3,6 +3,8 @@ import axios from "axios"
 
 function App() {
   const [patients,setPatients] = useState([])
+  const [search,setSearch] = useState("")
+  const [loading,setLoading] = useState(true)
   useEffect(()=>{
     axios.get("https://doc-back.onrender.com/patients").then((res)=>{
 console.log(res.data)
@@ -13,16 +15,19 @@ console.log(res.data)
     })
   },[])
   return (
-    <div className="App">
-      <h1>Patients</h1>
-      {patients.map((patient)=>(
-        <div key={patient._id}>
-          <h2>{patient.name}</h2>
-          <p>{patient.age} years old</p>
-          <p>{patient.gender}</p>
-          <p>{patient.diagnosis}</p>
-        </div>
-      ))}
-    </div>
+    <div className="container">
+      <h2>Patients Dashboard</h2>
+      <input type="text" className='form-control mb-4' placeholder="Search patient by name..." />
+{
+  loading && <div className='alert alert-info'>Loading...</div>
+}
+{
+  !loading && (
+    <div>Patients loaded</div>
   )
 }
+</div>
+  )
+}
+
+export default App
