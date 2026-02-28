@@ -1,5 +1,6 @@
 import { useState,useEffect,useMemo, use } from "react"
 import axios from "axios"
+import PatientCard from "./PatientCard"
 
 function App() {
   const [patients,setPatients] = useState([])
