@@ -1,34 +1,44 @@
-import { useState,useEffect,useMemo} from "react"
+import { useState, useEffect, useMemo } from "react"
 import axios from "axios"
 import PatientCard from "./PatientCard"
 
 function App() {
-  const [patients,setPatients] = useState([])
-  const [search,setSearch] = useState("")
-  const [loading,setLoading] = useState(true)
-  useEffect(()=>{
-    axios.get("https://doc-back.onrender.com/patients").then((res)=>{
-console.log(res.data)
+  const [patients, setPatients] = useState([])
+  const [search, setSearch] = useState("")
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    axios.get("https://doc-back.onrender.com/patients").then((res) => {
+      console.log(res.data)
       setPatients(res.data)
+      setLoading(false)
     })
-    .catch((err)=>{
-      console.log(err)
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [])
+  const filteredPatients = useMemo(() => {
+    return patients.filter((i) => {
+      i.name.toLowerCase().includes(search.toLowerCase())
     })
-  },[])
+  }, [search, patients])
   return (
     <div className="container">
-      <h2>Patients Dashboard</h2>
-      <input type="text" className='form-control mb-4' placeholder="Search patient by name..." />
-{
-  loading && <div className='alert alert-info'>Loading...</div>
-}
-{
-  !loading && (
-    <div>Patients loaded</div>
-  )
-}
-</div>
-  )
-}
+      <h2 className="text-center">Patient Dashboard</h2>
+      <input type="text" className='form-control mb-4' placeholder="Search patient by name..." onChange={(e) => setSearch(e.target.value)} />
+      {
+        loading && <div className='alert alert-info'>Loading...</div>
+      }
+      {
+        !loading && filteredPatients.map((i) => (
+          <div className="col-md-4 mb-3" key={i._id}>
 
+          <PatientCard patient={i} />
+
+          </div>
+        ))
+      }
+    </div>
+  )
+}
+  
 export default App
